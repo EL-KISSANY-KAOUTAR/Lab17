@@ -11,7 +11,7 @@ apk
 <img width="878" height="482" alt="image" src="https://github.com/user-attachments/assets/632bf14e-1a37-4158-94e6-200b5c4f60b2" />
 L’APK officiel `UnCrackable-Level3.apk` a été téléchargé depuis le dépôt OWASP MSTG puis installé sur l’émulateur Android à l’aide de la commande `adb install`. Après installation, l’application s’ouvre correctement et affiche l’écran principal contenant le champ “Enter the Secret String”, ce qui confirme que l’APK est prêt pour l’analyse.
 
-Étape 1 : Analyse statique simple avec Jadx-GUI (comprendre le Java)
+Étape 1 : Analyse statique simple avec Jadx-GUI (comprendre le Java) 
 <img width="959" height="484" alt="image" src="https://github.com/user-attachments/assets/a1538d3a-d227-442b-849a-ef32d30932fd" />
 
 <img width="959" height="491" alt="image" src="https://github.com/user-attachments/assets/53eef9a3-2e99-4bf8-97b3-9e6ec4469eb1" />
