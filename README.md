@@ -1,6 +1,6 @@
 # LAB 17 : Cracker OWASP Uncrackable Android Level 3
 
-Prérequis: 
+**Prérequis :**  
 
 - Ghidra
 
@@ -100,15 +100,69 @@ Remplace tout le bloc d’erreur par :
 
 Étape 4 : Patch de la librairie native avec Ghidra (anti-debug + anti-Frida)
 
+La librairie native libfoo.so a été importée dans Ghidra via la création d’un nouveau projet. Cette étape permet d’analyser le code natif compilé (C/C++) de l’application Android.
+
 <img width="586" height="437" alt="image" src="https://github.com/user-attachments/assets/c0779476-09d8-45da-8043-47b837678e3c" />
+
+Une analyse automatique a été lancée afin que Ghidra identifie les fonctions, les variables et les structures internes de la librairie. Cette étape est essentielle pour faciliter la compréhension du code natif.
 
 <img width="640" height="359" alt="image" src="https://github.com/user-attachments/assets/7563aa65-d967-4d6b-bf03-090c5a2f736c" />
 
+Une recherche de chaînes de caractères a été effectuée dans la librairie. La présence de la chaîne "frida" indique que l’application implémente une protection contre l’outil Frida, utilisé pour le reverse engineering dynamique.
+
 <img width="678" height="501" alt="image" src="https://github.com/user-attachments/assets/2af2983e-bf90-4964-af4b-8eaf3be1aff8" /> 
+
+La fonction FUN_00103910 a été identifiée comme responsable de la protection anti-debug. Le code montre l’utilisation de fonctions système telles que fork(), ptrace() et waitpid(), qui permettent de détecter la présence d’un debugger. 
+Pour contourner cette protection, la première instruction de la fonction a été remplacée par l’instruction RET. Cette modification force la fonction à retourner immédiatement sans exécuter les mécanismes de détection. Ainsi, les protections anti-debug et anti-Frida sont désactivées. 
 
 <img width="803" height="348" alt="image" src="https://github.com/user-attachments/assets/cad15d66-59b5-470c-a4af-0b78c1b877fe" />
 
+LAB 17 : Cracker OWASP Uncrackable Android Level 3
 
+- Retrouver la fonction native correspondante
+Dans Ghidra :
+Allez dans Symbol Tree → cherchez Java_sg_vantagepoint_uncrackable3_Check_check_code
+
+<img width="959" height="471" alt="image" src="https://github.com/user-attachments/assets/8d3deafd-4d08-4f71-9131-54da72dd52dc" />
+
+Observer la structure générale du pseudo-code
+
+<img width="959" height="438" alt="image" src="https://github.com/user-attachments/assets/83c8fc4d-dadf-4f06-8ff8-c6011ee4e467" />
+
+Dans la fonction native FUN_001012c0, plusieurs éléments indiquent la présence d’obfuscation. On observe notamment l’utilisation d’un générateur pseudo-aléatoire de type LCG (0x41c64e6d + 0x3039), des appels répétés à malloc(0x10) ainsi que la construction d’une liste chaînée complexe (_1_sub_doit__opaque_list1_1). Ces éléments n’ont aucun impact sur la logique de vérification du mot de passe et servent uniquement à compliquer l’analyse statique. On en déduit que cette partie du code constitue du bruit d’obfuscation destiné à masquer la logique réelle de l’application.
+
+<img width="383" height="215" alt="image" src="https://github.com/user-attachments/assets/51afb49d-3cc3-4bd2-9dbc-e96f8f5beb74" />
+<img width="407" height="160" alt="image" src="https://github.com/user-attachments/assets/6a27b8c1-5320-4bf6-ab35-c84e182f7922" />
+<img width="464" height="192" alt="image" src="https://github.com/user-attachments/assets/0459c7c7-da73-4419-a9f0-c7518dbaf297" />
+
+5. Se concentrer sur la fin de la fonction
+   
+<img width="488" height="325" alt="image" src="https://github.com/user-attachments/assets/f28dfd45-d7c1-4755-ac7c-cc2e526dd23e" />
+
+6. Relever les constantes importantes
+   
+1d 08 11 13 0f 17 49 15  0d 00 03 19 5a 1d 13 15
+08 0e 5a 00 17 08 13 14
+
+La fin de la fonction FUN_001012c0 contient les données utiles du challenge. Trois constantes de type qword ont été identifiées, représentant au total 24 octets. Après conversion en format little-endian, ces valeurs correspondent à une clé encodée. Ces données seront utilisées dans une étape ultérieure pour reconstituer la clé secrète via une opération XOR.
+
+### Questions de réflexion
+
+**Pourquoi l’obfuscateur ajoute-t-il autant d’instructions répétitives ?**  
+L’obfuscateur ajoute des instructions répétitives afin de compliquer l’analyse statique et ralentir le reverse engineering. Ces blocs inutiles augmentent artificiellement la taille et la complexité du code, rendant difficile l’identification de la logique réelle.
+
+**Pourquoi les écritures finales dans param_1 sont-elles plus importantes que les 90 malloc ?**  
+Les écritures finales dans param_1 contiennent les données réellement utilisées pour la vérification du mot de passe, contrairement aux nombreux appels à malloc, qui ne servent qu’à créer du bruit, ces écritures construisent la clé encodée utilisée dans la comparaison.
+
+**Quel avantage de sécurité apporte une vérification native par rapport à une vérification pure Java ?**  
+La vérification native est plus difficile à analyser car elle est compilée en code machine et non en bytecode Java facilement décompilable, cela rend le reverse engineering plus complexe et protège mieux la logique sensible.
+
+**Comment un développeur défensif pourrait-il rendre cette clé encore plus difficile à extraire ?**  
+Un développeur pourrait utiliser du chiffrement dynamique, générer la clé à l’exécution, combiner plusieurs techniques d’obfuscation, ou encore vérifier l’environnement d’exécution (anti-debug, anti-Frida) pour compliquer davantage l’analyse.
+
+### Validation de l’étape
+
+La méthode check.check_code() est responsable de la validation finale de l’entrée utilisateur, elle délègue cette vérification à une fonction native afin de masquer la logique. La fonction `FUN_001012c0` contient cette logique, mais elle est fortement obfusquée avec du bruit comme des appels répétés à malloc, un générateur pseudo-aléatoire (LCG) et des structures inutiles. Ces éléments compliquent l’analyse mais ne participent pas à la vérification. En réalité, la partie essentielle se situe à la fin de la fonction, où un buffer est rempli avec des constantes encodées. Ce buffer est ensuite utilisé pour comparer l’entrée utilisateur, ce qui en fait l’élément clé du challenge.
 
 
 
