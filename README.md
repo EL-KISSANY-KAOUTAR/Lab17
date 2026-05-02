@@ -79,7 +79,7 @@ Remplace tout le bloc d’erreur par :
 <img width="586" height="437" alt="image" src="https://github.com/user-attachments/assets/c0779476-09d8-45da-8043-47b837678e3c" />
 <img width="640" height="359" alt="image" src="https://github.com/user-attachments/assets/7563aa65-d967-4d6b-bf03-090c5a2f736c" />
 
-<img width="678" height="501" alt="image" src="https://github.com/user-attachments/assets/2af2983e-bf90-4964-af4b-8eaf3be1aff8" />
+<img width="678" height="501" alt="image" src="https://github.com/user-attachments/assets/2af2983e-bf90-4964-af4b-8eaf3be1aff8" /> 
 
 <img width="803" height="348" alt="image" src="https://github.com/user-attachments/assets/cad15d66-59b5-470c-a4af-0b78c1b877fe" />
 
