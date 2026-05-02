@@ -17,7 +17,7 @@
 
 L’APK officiel `UnCrackable-Level3.apk` a été téléchargé depuis le dépôt OWASP MSTG puis installé sur l’émulateur Android à l’aide de la commande `adb install`. Après installation, l’application s’ouvre correctement et affiche l’écran principal contenant le champ “Enter the Secret String”, ce qui confirme que l’APK est prêt pour l’analyse.
 
-1) Étape 1 : Analyse statique simple avec Jadx-GUI (comprendre le Java)
+**1) Étape 1 : Analyse statique simple avec Jadx-GUI (comprendre le Java)**  
    
 - Ouvre l’APK dans Jadx-GUI (double-clic sur le fichier):
 
@@ -41,14 +41,14 @@ Points importants observe dans le MainActivity :
 - IntegrityCheck.isDebuggable() vérifie si l’application est en mode debug.
 - verify() appelle check_code() pour valider le secret saisi.
 
-2- Étape 2 : Décompiler l’APK avec apktool 
+**2- Étape 2 : Décompiler l’APK avec apktool**  
 
 l’objectif est de transformer l’APK en dossier modifiable.
 
 <img width="862" height="197" alt="image" src="https://github.com/user-attachments/assets/f9a8ec2d-f2b8-40d4-b17f-b275b182c8f9" />
 <img width="704" height="312" alt="image" src="https://github.com/user-attachments/assets/5e4ac8d3-165a-41f4-bcec-75a1aca43bb5" />
 
-Étape 3 : Patch smali – Supprimer le message « tampered » / root
+**Étape 3 : Patch smali – Supprimer le message « tampered » / root**  
 
 1. Ouvrir le bon fichier:
 
@@ -98,7 +98,7 @@ Remplace tout le bloc d’erreur par :
     
 <img width="853" height="92" alt="image" src="https://github.com/user-attachments/assets/f05009db-94aa-45d3-9ee0-5cb8c59810a4" />
 
-Étape 4 : Patch de la librairie native avec Ghidra (anti-debug + anti-Frida)
+**Étape 4 : Patch de la librairie native avec Ghidra (anti-debug + anti-Frida)**  
 
 La librairie native libfoo.so a été importée dans Ghidra via la création d’un nouveau projet. Cette étape permet d’analyser le code natif compilé (C/C++) de l’application Android.
 
@@ -117,7 +117,7 @@ Pour contourner cette protection, la première instruction de la fonction a ét�
 
 <img width="803" height="348" alt="image" src="https://github.com/user-attachments/assets/cad15d66-59b5-470c-a4af-0b78c1b877fe" />
 
-LAB 17 : Cracker OWASP Uncrackable Android Level 3
+**Étape 5 : Analyser la logique native de vérification dans libuncrackable3.so** 
 
 - Retrouver la fonction native correspondante
 Dans Ghidra :
