@@ -1,12 +1,15 @@
 # LAB 17 : Cracker OWASP Uncrackable Android Level 3
 
-Ghidra
+Prérequis: 
+- Ghidra
+
 <img width="587" height="446" alt="image" src="https://github.com/user-attachments/assets/c134714f-384e-481f-8918-d5057955c4b6" />
 <img width="434" height="289" alt="image" src="https://github.com/user-attachments/assets/713da09b-8cb0-4e5e-ba52-94adcba1389b" />
 
-apk
+- apk:
 <img width="913" height="37" alt="image" src="https://github.com/user-attachments/assets/f7cfcd93-3538-40d5-a16c-2e1d623b8036" />
 <img width="852" height="287" alt="image" src="https://github.com/user-attachments/assets/665af25d-8632-4714-8ed1-926feb6382c3" />
+
 
 <img width="878" height="482" alt="image" src="https://github.com/user-attachments/assets/632bf14e-1a37-4158-94e6-200b5c4f60b2" />
 L’APK officiel `UnCrackable-Level3.apk` a été téléchargé depuis le dépôt OWASP MSTG puis installé sur l’émulateur Android à l’aide de la commande `adb install`. Après installation, l’application s’ouvre correctement et affiche l’écran principal contenant le champ “Enter the Secret String”, ce qui confirme que l’APK est prêt pour l’analyse.
